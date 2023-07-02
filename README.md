@@ -14,6 +14,6 @@ The system module utilizes the following components:
 2.  [DHT11 thermocouple module](https://www.sgbotic.com/index.php?dispatch=products.view&product_id=1923)
 
 **Caisse diagram**
-![Diagram](https://github.com/MamaxeFinders/K868-16A_I-O/blob/main/Installation%20System%20KC868.pdf)
-
+![Diagram PDF](https://github.com/MamaxeFinders/K868-16A_I-O/blob/main/Installation%20System%20KC868.pdf)
+![Flow Chart PDF]https://github.com/MamaxeFinders/K868-16A_I-O/blob/main/Flowchart.pdf)
 
