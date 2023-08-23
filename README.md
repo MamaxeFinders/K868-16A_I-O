@@ -1,5 +1,5 @@
 # K868-16A_I-O
-
+Using an KC868-A16 ESP32 board I optimised an Human to Machine interface in order to control a car wash system. There were various challenges in term of connectivity and also reliability as nobody is present on-site so we need some triggers when a fault occure. 
 
  * [**HARDWARE SETUP**](#hardware-setup)
     * [**SYSTEM MODULE**](#system-module)
