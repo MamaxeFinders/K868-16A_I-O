@@ -187,7 +187,7 @@ void loop() {
   } else if (InputIndex > 0 && InputDef[InputIndex - 1] == "GEL" && !ProgramStarted && !GELoutput) {  // GEL input
     GELoutput = true;
     Serial.println("GEL ACTIVE");
-  } else if (InputIndex > 0 && InputDef[InputIndex - 1] != "GEL" && !ProgramStarted && GELoutput){
+  } else if (InputDef[InputIndex - 1] != "GEL" && !ProgramStarted && GELoutput){
     GELoutput = false;
     Serial.println("GEL DEACTIVE");
   }
