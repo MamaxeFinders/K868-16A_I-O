@@ -5,7 +5,7 @@
 #include <WiFiManager.h>     // https://github.com/tzapu/WiFiManager //https://microdigisoft.com/
 #include <HTTPClient.h>
 // Google script ID and required credentials
-String GOOGLE_SCRIPT_ID = "AKfycbziCv5KrLd04WmRT_k1B10jjVmOscfB7w6_DkPbByOzOITigoVcK06lYO42ExSkvbdJ";
+String GOOGLE_SCRIPT_ID = "XXXX";
 WiFiManager wm;
 
 #define CONNECTION_RETRY_DELAY 500   // Retry every 5 seconds in ms
