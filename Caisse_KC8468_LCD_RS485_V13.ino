@@ -339,14 +339,12 @@ void displayMessage(const String& messageL1, const String& messageL2, bool clear
 }
 // ---- GET VALUE INPUT ---- //
 int getInputIndex(uint8_t inputStatus) {
-  int buttonIndex = -1;
-  // Count the number of set bits in inputStatus
   for (int i = 0; i < 8; i++) {
-    if ((inputStatus & (1 << i)) == 0) {
-      buttonIndex = i + 1;  // Store the index of the set bit
-      return buttonIndex;
+    if (inputStatus & (1 << i)) {
+      return i;  // Return the index of the set bit
     }
   }
+  return -1; // Return -1 if no set bit is found
 }
 
 void SendToRS485(String messageRS485){
