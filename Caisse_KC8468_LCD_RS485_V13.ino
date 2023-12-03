@@ -141,7 +141,7 @@ void setup() {
 // ======================================== LOOP ======================================== //
 void loop() {
   uint8_t inputStatus = pcf8574_in2.digitalReadAll();
-  int InputIndex = getInputIndex(inputStatus);
+  int InputIndex = getInputIndexINPUTSTATUS(inputStatus);
   // _______________________ FUNCTION 1 : CHECK INPUT STATUS _______________________ //
   if (!digitalRead(0)) {  // User press RESET button
     displayMessage("TEMP: " + String(dht.readTemperature()), "HUM: "+String(dht.readHumidity()), 1);
@@ -194,7 +194,7 @@ void loop() {
   // _______________________ FUNCTION 2 : CHECK BUTTON PROGRAM _______________________ //
   if (creditAmount > 0) {  // If credit > 0 listen buttons
     uint8_t Action_Input = pcf8574_in1.digitalReadAll();
-    buttonIndex = getInputIndex(Action_Input);
+    buttonIndex = getInputIndexBUTTON(Action_Input);
     if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "STOP") {  // STOP input
       displayMessage("      STOP      ", "", true);
       ProgramStarted = false;
@@ -337,10 +337,19 @@ void displayMessage(const String& messageL1, const String& messageL2, bool clear
     //RS485Serial.println(messageRS485);
   }
 }
-// ---- GET VALUE INPUT ---- //
-int getInputIndex(uint8_t inputStatus) {
+// ---- GET VALUE INPUT STATUS ---- //
+int getInputIndexINPUTSTATUS(uint8_t inputStatus) {
+  for (int i = 0; i < 8; i++) {
+    if (inputStatus & (1 << i)) == 0) {
+      return i+1;  // Return the index of the set bit
+    }
+  }
+  return -1; // Return -1 if no set bit is found
+}
+// ---- GET VALUE INPUT BUTTON ---- //
+int getInputIndexBUTTON(uint8_t inputStatus) {
   for (int i = 7; i >= 0; i--) {
-    if ((inputStatus & (1 << i)) == 0) {
+    if (inputStatus & (1 << i)) == 0) {
       return i+1;  // Return the index of the set bit
     }
   }
