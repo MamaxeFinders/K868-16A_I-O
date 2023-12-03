@@ -62,7 +62,7 @@ String InputDef[] = { "COIN", "COIN", "COIN", "COIN", "NA", "SHOCK", "GEL", "PRE
 String InputButton[] = { "BUTTON", "BUTTON", "BUTTON", "BUTTON", "NA", "NA", "NA", "STOP" };  // Inputs Buttons
 int ALARMoutput = 6;                                                                          // Location of ALARM relay Output Y15
 int PUMPoutput = 0;                                                                           // Location of ALARM relay Output Y9
-int GELoutput = false;                                                                            // Location of GEL relay (EV eau) Output Y2
+int GELoutput = false;                                                                        // Location of GEL relay (EV eau) Output Y2
 int TimePreStart = 3;                                                                         // Pre Activate the system for X seconds before program starts
 
 int Standby_Output[] =   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // Combination Standby    Output Y1-16
@@ -341,6 +341,7 @@ void displayMessage(const String& messageL1, const String& messageL2, bool clear
 int getInputIndexINPUTSTATUS(uint8_t inputStatus) {
   for (int i = 0; i < 8; i++) {
     if ((inputStatus & (1 << i)) == 0) {
+
       return i+1;  // Return the index of the set bit
     }
   }
