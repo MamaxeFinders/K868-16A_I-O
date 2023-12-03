@@ -339,7 +339,7 @@ void displayMessage(const String& messageL1, const String& messageL2, bool clear
 }
 // ---- GET VALUE INPUT ---- //
 int getInputIndex(uint8_t inputStatus) {
-  for (int i = 0; i < 8; i++) {
+  for (int i = 7; i >= 0; i--) {
     if ((inputStatus & (1 << i)) == 0) {
       return i+1;  // Return the index of the set bit
     }
