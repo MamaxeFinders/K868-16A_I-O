@@ -341,7 +341,7 @@ void displayMessage(const String& messageL1, const String& messageL2, bool clear
 int getInputIndex(uint8_t inputStatus) {
   for (int i = 0; i < 8; i++) {
     if (inputStatus & (1 << i)) {
-      return i;  // Return the index of the set bit
+      return i+1;  // Return the index of the set bit
     }
   }
   return -1; // Return -1 if no set bit is found
