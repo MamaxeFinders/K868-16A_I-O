@@ -6,7 +6,7 @@
 #include <EEPROM.h>
 #include <DHT.h> //Adafruit lib https://github.com/adafruit/DHT-sensor-library/blob/master/examples/DHTtester/DHTtester.ino
 // Google script ID and required credentials
-String GOOGLE_SCRIPT_ID = "ADD YOU OOGLE SCRIPT ID HERE";
+String GOOGLE_SCRIPT_ID = "ADD YOUR GOOGLE SCRIPT ID HERE";
 WiFiManager wm;
 // RS-485 pins for KC868-A16 board
 #define RS485_TX_PIN 13
