@@ -103,7 +103,7 @@ void setup() {
     if(!res) {Serial.println("Failed to connect");} 
     else {Serial.println("connected...yeey :)");}
 
-  RS485Serial.begin(115200, SERIAL_8N1, RS485_RX_PIN, RS485_TX_PIN);
+  RS485Serial.begin(9600, SERIAL_8N1, RS485_RX_PIN, RS485_TX_PIN);
   pinMode(0, INPUT);  // Button DOWNLOAD used to reset 3sec
   Serial.println(F("DHTxx test!"));
   dht.begin();
@@ -246,7 +246,7 @@ void loop() {
     ProgramStarted = false;
     displayMessage("BONJOUR         ", "INSEREZ PIECE   ", false);
     static unsigned long lastRS485CheckTime = 0;
-    if (millis() - lastRS485CheckTime >= 1000) {
+    if (millis() - lastRS485CheckTime >= 5000) {
       SendToRS485(String(DeviceNumber)+":OK");
       lastRS485CheckTime = millis();
     }
