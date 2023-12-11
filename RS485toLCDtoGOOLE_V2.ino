@@ -18,7 +18,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
   Serial.begin(115200);
-  RS485Serial.begin(115200, SERIAL_8N1, 16, 17); //16 on RO & 17 on DI
+  RS485Serial.begin(9600, SERIAL_8N1, 16, 17); //16 on RO & 17 on DI
   pinMode(RE, OUTPUT);
   pinMode(DE, OUTPUT);
   digitalWrite(DE, LOW);
@@ -101,7 +101,7 @@ void loop() {
     }
   }
   static unsigned long lastLCDTime = 0;
-  if (millis() - lastLCDTime >= 10000) {
+  if (millis() - lastLCDTime >= 20000) {
     lcd.clear();
     lastLCDTime = millis();
     lcd.setCursor(0, 1);
