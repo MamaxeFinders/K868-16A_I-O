@@ -20,10 +20,7 @@ void setup() {
   Serial.begin(115200);
   RS485Serial_1.begin(9600, SERIAL_8N1, 16, -1); //16 <= Relay5
   RS485Serial_2.begin(9600, SERIAL_8N1, 17, -1); //25 <= Relay4
-  pinMode(RE, OUTPUT);
-  pinMode(DE, OUTPUT);
-  digitalWrite(DE, LOW);
-  digitalWrite(RE, LOW);
+  // RS485Serial_2.begin(9600, SERIAL_8N1, 25, -1); //25 <= PROG 2 | TASTES CA SI L AUTRE NE FONCTIONNE PAS
   // ---- LCD SETUP ----//
   lcd.init();  // initialize the lcd
   lcd.backlight();
@@ -55,6 +52,7 @@ void loop() {
   if (!digitalRead(0)) {  // User press RESET button
     lcd.clear();
     lcd.setCursor(0, 1);
+    Serial.println(message);
     if(WiFi.status() == WL_CONNECTED) {
       // Check Internet connectivity
       if (isConnectedToInternet()) {
@@ -82,29 +80,13 @@ void loop() {
     message = RS485Serial_1.readStringUntil('\n');
     Serial.print("Received S1: ");
     Serial.println(message);
+    DesplyMessage(message);
   }else if(RS485Serial_2.available()) {
     message = RS485Serial_2.readStringUntil('\n');
     Serial.print("Received S2: ");
     Serial.println(message);
+    DesplyMessage(message);
   }
-    lcd.setCursor(0, 0);
-    lcd.print("CAISSE");
-    if (message.startsWith("G:")) { // PIN CAISSE to Google
-      message.remove(0, 2);  // Remove the indicator from the message
-      Send_Data_to_Google(message);
-    }else if (message.startsWith("1:")) { //RS485 CAISSE
-        lcd.setCursor(7, 0);
-        lcd.print("1");
-    }else if (message.startsWith("2:")) { //RS485 CAISSE
-        lcd.setCursor(9, 0);
-        lcd.print("2");
-    }else if (message.startsWith("3:")) { //RS485 CAISSE
-        lcd.setCursor(11, 0);
-        lcd.print("3");
-    }else if (message.startsWith("4:")) { //RS485 CAISSE
-        lcd.setCursor(13, 0);
-        lcd.print("4");
-    }
   
   static unsigned long lastLCDTime = 0;
   if (millis() - lastLCDTime >= 20000) {
@@ -129,6 +111,27 @@ void loop() {
     }
   }
  delay(10);
+}
+
+void DesplyMessage(String messageRS485){
+    lcd.setCursor(0, 0);
+    lcd.print("CAISSE");
+    if (messageRS485.startsWith("G:")) { // PIN CAISSE to Google
+      messageRS485.remove(0, 2);  // Remove the indicator from the message
+      Send_Data_to_Google(messageRS485);
+    }else if (messageRS485.startsWith("1:")) { //RS485 CAISSE
+        lcd.setCursor(7, 0);
+        lcd.print("1");
+    }else if (messageRS485.startsWith("2:")) { //RS485 CAISSE
+        lcd.setCursor(9, 0);
+        lcd.print("2");
+    }else if (messageRS485.startsWith("3:")) { //RS485 CAISSE
+        lcd.setCursor(11, 0);
+        lcd.print("3");
+    }else if (messageRS485.startsWith("4:")) { //RS485 CAISSE
+        lcd.setCursor(13, 0);
+        lcd.print("4");
+    }
 }
 
 bool isConnectedToInternet() {
