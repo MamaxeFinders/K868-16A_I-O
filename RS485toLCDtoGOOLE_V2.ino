@@ -10,15 +10,16 @@ WiFiManager wm;
 
 #define CONNECTION_RETRY_DELAY 500   // Retry every 5 seconds in ms
 // RS485 setup with ESp32
-HardwareSerial RS485Serial(1);
-#define RE 4  // Connect RE terminal with 32 of ESP
-#define DE 5  // Connect DE terminal with 33 of ESP
+HardwareSerial RS485Serial_1(2);
+HardwareSerial RS485Serial_2(0);
+
 // Initialize the LCD screen
 LiquidCrystal_I2C lcd(0x27, 16, 2);
-
+String message = "Pas de message";
 void setup() {
   Serial.begin(115200);
-  RS485Serial.begin(9600, SERIAL_8N1, 16, 17); //16 on RO & 17 on DI
+  RS485Serial_1.begin(9600, SERIAL_8N1, 16, -1); //16 on RO & 17 on DI
+  RS485Serial_2.begin(9600, SERIAL_8N1, 3, -1); //16 on RO & 17 on DI
   pinMode(RE, OUTPUT);
   pinMode(DE, OUTPUT);
   digitalWrite(DE, LOW);
@@ -77,10 +78,15 @@ void loop() {
       wm.resetSettings();
       ESP.restart();
     }
-  }else if (RS485Serial.available()) {
-    String message = RS485Serial.readStringUntil('\n');
-    Serial.print("Received: ");
+  }else if (RS485Serial_1.available()) {
+    message = RS485Serial_1.readStringUntil('\n');
+    Serial.print("Received S1: ");
     Serial.println(message);
+  }else if(RS485Serial_2.available()) {
+    message = RS485Serial_2.readStringUntil('\n');
+    Serial.print("Received S2: ");
+    Serial.println(message);
+  }
     lcd.setCursor(0, 0);
     lcd.print("CAISSE");
     if (message.startsWith("G:")) { // PIN CAISSE to Google
@@ -99,10 +105,11 @@ void loop() {
         lcd.setCursor(13, 0);
         lcd.print("4");
     }
-  }
+  
   static unsigned long lastLCDTime = 0;
   if (millis() - lastLCDTime >= 20000) {
     lcd.clear();
+    message = "Pas de message";
     lastLCDTime = millis();
     lcd.setCursor(0, 1);
     if(WiFi.status() == WL_CONNECTED) {
