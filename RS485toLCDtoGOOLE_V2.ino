@@ -10,16 +10,16 @@ WiFiManager wm;
 
 #define CONNECTION_RETRY_DELAY 500   // Retry every 5 seconds in ms
 // RS485 setup with ESp32
-HardwareSerial RS485Serial_1(2);
-HardwareSerial RS485Serial_2(0);
+HardwareSerial RS485Serial_1(1); // Use UART1 for RS485 module 1
+HardwareSerial RS485Serial_2(2); // Use UART2 for RS485 module 2
 
 // Initialize the LCD screen
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 String message = "Pas de message";
 void setup() {
   Serial.begin(115200);
-  RS485Serial_1.begin(9600, SERIAL_8N1, 16, -1); //16 on RO & 17 on DI
-  RS485Serial_2.begin(9600, SERIAL_8N1, 3, -1); //16 on RO & 17 on DI
+  RS485Serial_1.begin(9600, SERIAL_8N1, 16, -1); //16 <= Relay5
+  RS485Serial_2.begin(9600, SERIAL_8N1, 17, -1); //25 <= Relay4
   pinMode(RE, OUTPUT);
   pinMode(DE, OUTPUT);
   digitalWrite(DE, LOW);
