@@ -198,11 +198,14 @@ void loop() {
     if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "STOP") {  // STOP input
       displayMessage("      STOP      ", "", true);
       ProgramStarted = false;
-      creditAmount = 0;
+      activateRelays(Standby_Output,-1);
+      SelectedProgram = 8;
+      ProgramStarted = false;
       delay(2000);
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && SelectedProgram < 5 ) {  // BUTTON input
+      //creditAmount = 0;
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgram] != "JANTES" ) {  // BUTTON input
       SelectedProgram = buttonIndex;
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && SelectedProgram == 0) {  // JANTES input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
     } else if (SelectedProgram > 0) {  // PROGRAM selected
       if (!ProgramStarted) {  // if first start
@@ -219,20 +222,20 @@ void loop() {
       }else{
         activateRelays(relay_out_sequence[SelectedProgram - 1],-1);
       }
-    unsigned long currentTime = millis(); // Get the current time
-    // Check if the interval has elapsed
-    if (currentTime - previousTime >= CREDIT_DECREMENT_INTERVAL) {
-        previousTime = currentTime; // Update the previous time
-        // Decrement the credit
-        if (creditAmount >= CREDIT_DECREMENT_AMOUNT[SelectedProgram - 1]) {
-            creditAmount -= CREDIT_DECREMENT_AMOUNT[SelectedProgram - 1];
-            int wholePart = int(creditAmount/100); // Get whole part
-            int fractionalPart = int((creditAmount/100 - wholePart) * 100); // Get fractional part
-            displayMessage("PROGRAM  " + String(SelectedProgram) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
-        } else {
-            creditAmount = 0;
+      unsigned long currentTime = millis(); // Get the current time
+      // Check if the interval has elapsed
+      if (currentTime - previousTime >= CREDIT_DECREMENT_INTERVAL) {
+          previousTime = currentTime; // Update the previous time
+          // Decrement the credit
+          if (creditAmount >= CREDIT_DECREMENT_AMOUNT[SelectedProgram - 1]) {
+              creditAmount -= CREDIT_DECREMENT_AMOUNT[SelectedProgram - 1];
+              int wholePart = int(creditAmount/100); // Get whole part
+              int fractionalPart = int((creditAmount/100 - wholePart) * 100); // Get fractional part
+              displayMessage("PROGRAM  " + String(SelectedProgram) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
+          } else {
+              creditAmount = 0;
+          }
         }
-      }
     }
   } else {  // STANDBY mode when Credit = 0
     if(GELoutput){activateRelays(GEL_Output,-1);
@@ -262,15 +265,6 @@ void loop() {
   delay(10);
 }
 
-String getParam(String name){
-  //read parameter from server, for customhmtl input
-  String value;
-  if(wm.server->hasArg(name)) {
-    value = wm.server->arg(name);
-  }
-  return value;
-}
-
 // ======================================== PARAM WIFI ======================================== //
 void saveParamCallback(){
   String customValueStr = getParam("customfieldid");
@@ -282,6 +276,14 @@ void saveParamCallback(){
   preferences.end();
   Serial.println("[CALLBACK] saveParamCallback fired");
   Serial.println("PARAM customfieldid = " + getParam("customfieldid"));
+}
+String getParam(String name){
+  //read parameter from server, for customhmtl input
+  String value;
+  if(wm.server->hasArg(name)) {
+    value = wm.server->arg(name);
+  }
+  return value;
 }
 
 // ======================================== FUNCTIONS ======================================== //
