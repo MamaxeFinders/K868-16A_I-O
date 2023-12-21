@@ -199,7 +199,7 @@ void loop() {
       displayMessage("      STOP      ", "", true);
       ProgramStarted = false;
       activateRelays(Standby_Output,-1);
-      SelectedProgram = 8;
+      SelectedProgram = buttonIndex;
       ProgramStarted = false;
       delay(2000);
       //creditAmount = 0;
