@@ -46,7 +46,7 @@ const float CREDIT_DECREMENT_AMOUNT[] = { 2.4, 2.4, 2.2, 2.4, 3.0, 0, 0, 0 };  /
 long CreditValue[] = { 100, 200, 300, 400 };                                      // Value of credit for each inputs
 
 // COMBINAISONS DES SORTIES RELAIS Y1-8
-unsigned int relay_out_sequence[8][16] = {
+int relay_out_sequence[8][16] = {
   { 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 },  // Combination  Button1
   { 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  Button2
   { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  Button3
@@ -200,15 +200,13 @@ void loop() {
       ProgramStarted = false;
       creditAmount = 0;
       delay(2000);
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && SelectedProgram 1= ) {  // BUTTON input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && SelectedProgram < 5 ) {  // BUTTON input
       SelectedProgram = buttonIndex;
-      activateRelays(Ready_Output,-1);
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES") {  // BUTTON input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && SelectedProgram == 0) {  // JANTES input
       SelectedProgram = buttonIndex;
-      activateRelays(Ready_Output,-1);
     } else if (SelectedProgram > 0) {  // PROGRAM selected
       if (!ProgramStarted) {  // if first start
-        activateRelays(relay_out_sequence,PUMPoutput);
+        activateRelays(relay_out_sequence[SelectedProgram-1],PUMPoutput);
         ProgramStarted = true;
         displayMessage("    ! PRET !    ", "", true);
         String messageSEND = "message=PROGRAM&Program=" + String(SelectedProgram) + "&caisse=" + String(DeviceNumber) + "&credit=" + String(creditAmount);
@@ -219,7 +217,7 @@ void loop() {
           delay(1000);
         }
       }else{
-        activateRelays(relay_out_sequence,-1);
+        activateRelays(relay_out_sequence[SelectedProgram - 1],-1);
       }
     unsigned long currentTime = millis(); // Get the current time
     // Check if the interval has elapsed
@@ -288,13 +286,13 @@ void saveParamCallback(){
 
 // ======================================== FUNCTIONS ======================================== //
 // ---- ACTIVATE RELAYS ---- //
-void activateRelays(unsigned int outputStatus, int ForceLow) {
+void activateRelays(int* outputStatus, int ForceLow) {
   for (int i = 0; i < 16; i++) {
     if (i < 8) {
       if (outputStatus[i] == 1 && i+1 != ForceLow) {
-        pcf8574_out1.digitalWrite(i, LOW);
+        pcf8574_out1.digitalWrite(i, LOW); // Relay ON
       } else if (outputStatus[i] == 0) {
-        pcf8574_out1.digitalWrite(i, HIGH);
+        pcf8574_out1.digitalWrite(i, HIGH); // Relay OFF
       }
     } else {
       if (outputStatus[i] == 1 && i+1 != ForceLow) {
