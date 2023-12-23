@@ -196,22 +196,21 @@ void loop() {
   if (creditAmount > 0) {  // If credit > 0 listen buttons
     uint8_t Action_Input = pcf8574_in1.digitalReadAll();
     buttonIndex = getInputIndexBUTTON(Action_Input);
-    if (buttonIndex > 0 && InputButton[SelectedProgram - 1] != "STOP") {
+    if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "STOP") { // STOP input
       SelectedProgram = buttonIndex;
-      displayMessage(String(ProgDisplay[SelectedProgram - 1]), "", true);
       int wholePart = int(creditAmount/100); // Get whole part
       int fractionalPart = int((creditAmount/100 - wholePart) * 100); // Get fractional part
-      displayMessage("PROG: " + String(ProgDisplay[ProgramStarted]) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
+      displayMessage("PROG: " + String(ProgDisplay[SelectedProgram - 1]) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
       ProgramStarted = false;
       activateRelays(Standby_Output,-1);
       ProgramStarted = false;
-      delay(2000);
+      delay(1000);
       //creditAmount = 0;
     } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgram-1] != "JANTES" ) {  // BUTTON input
       SelectedProgram = buttonIndex;
     } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram-1] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
-    } else if (SelectedProgram > 0 && SelectedProgram < 8) {  // PROGRAM selected
+    } else if (SelectedProgram > 0 && SelectedProgram < 8) {  // PROGRAM selected and not STOP
       if (!ProgramStarted) {  // if first start
         activateRelays(relay_out_sequence[SelectedProgram-1],PUMPoutput);
         ProgramStarted = true;
