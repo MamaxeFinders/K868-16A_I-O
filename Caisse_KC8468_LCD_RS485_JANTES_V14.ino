@@ -60,6 +60,7 @@ int relay_out_sequence[8][16] = {
 //1.Pompe 2.Injecteur Savon 3.EV eau 4.EV eau Chaude 5.EV eau Osmose 6.EV air 7. Bipasse PreLavage
 String InputDef[] = { "COIN", "COIN", "COIN", "COIN", "NA", "SHOCK", "GEL", "PRESOSTAT" };    // Inputs function
 String InputButton[] = { "BUTTON", "BUTTON", "BUTTON", "BUTTON", "JANTES", "NA", "NA", "STOP" };  // Inputs Buttons
+String ProgDisplay[] = { " 1    ", " 2    ", " 3    ", " 4    ", "JANTES", "NA", "NA", " STOP " };  // Prog to display on LCD
 int ALARMoutput = 6;                                                                          // Location of ALARM relay Output Y15
 int PUMPoutput = 9;                                                                           // Location of ALARM relay Output Y9
 int GELoutput = false;                                                                        // Location of GEL relay (EV eau) Output Y2
@@ -95,7 +96,7 @@ void setup() {
   std::vector<const char *> menu = {"wifi","info","sep","param","sep","restart","exit"};
   wm.setMenu(menu);
   wm.setClass("invert"); // set dark theme
-  wm.setConfigPortalTimeout(60); // auto close configportal after n seconds
+  wm.setConfigPortalTimeout(20); // auto close configportal after n seconds
     bool res;
     char WiFiName[32];
     sprintf(WiFiName, "CAISSE_%d", DeviceNumber);
@@ -195,19 +196,22 @@ void loop() {
   if (creditAmount > 0) {  // If credit > 0 listen buttons
     uint8_t Action_Input = pcf8574_in1.digitalReadAll();
     buttonIndex = getInputIndexBUTTON(Action_Input);
-    if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "STOP") {  // STOP input
-      displayMessage("      STOP      ", "", true);
+    if (buttonIndex > 0 && InputButton[SelectedProgram - 1] != "STOP") {
+      SelectedProgram = buttonIndex;
+      displayMessage(String(ProgDisplay[SelectedProgram - 1]), "", true);
+      int wholePart = int(creditAmount/100); // Get whole part
+      int fractionalPart = int((creditAmount/100 - wholePart) * 100); // Get fractional part
+      displayMessage("PROG: " + String(ProgDisplay[ProgramStarted]) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
       ProgramStarted = false;
       activateRelays(Standby_Output,-1);
-      SelectedProgram = buttonIndex;
       ProgramStarted = false;
       delay(2000);
       //creditAmount = 0;
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgra-1] != "JANTES" ) {  // BUTTON input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgram-1] != "JANTES" ) {  // BUTTON input
       SelectedProgram = buttonIndex;
     } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram-1] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
-    } else if (SelectedProgram > 0) {  // PROGRAM selected
+    } else if (SelectedProgram > 0 && SelectedProgram < 8) {  // PROGRAM selected
       if (!ProgramStarted) {  // if first start
         activateRelays(relay_out_sequence[SelectedProgram-1],PUMPoutput);
         ProgramStarted = true;
@@ -231,7 +235,7 @@ void loop() {
               creditAmount -= CREDIT_DECREMENT_AMOUNT[SelectedProgram - 1];
               int wholePart = int(creditAmount/100); // Get whole part
               int fractionalPart = int((creditAmount/100 - wholePart) * 100); // Get fractional part
-              displayMessage("PROGRAM  " + String(SelectedProgram) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
+              displayMessage("PROG: " + String(ProgDisplay[SelectedProgram - 1]) + "      ","CREDIT : " + String(wholePart) + "." + (fractionalPart < 10 ? "0" : "") + String(fractionalPart) + " E  ",false);
           } else {
               creditAmount = 0;
           }
