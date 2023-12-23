@@ -48,10 +48,10 @@ long CreditValue[] = { 100, 200, 300, 400 };                                    
 // COMBINAISONS DES SORTIES RELAIS Y1-8
 int relay_out_sequence[8][16] = {
   { 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 },  // Combination  Button1
-  { 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  Button2
-  { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  Button3
-  { 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  Button4
-  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },  // Combination  JANTES
+  { 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },  // Combination  Button2
+  { 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },  // Combination  Button3
+  { 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },  // Combination  Button4
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },  // Combination  JANTES
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // Combination
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },  // Combination
   { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }   // Combination  STOP
@@ -203,9 +203,9 @@ void loop() {
       ProgramStarted = false;
       delay(2000);
       //creditAmount = 0;
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgram] != "JANTES" ) {  // BUTTON input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "BUTTON" && InputButton[SelectedProgra-1] != "JANTES" ) {  // BUTTON input
       SelectedProgram = buttonIndex;
-    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram] != "BUTTON") {  // JANTES input
+    } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram-1] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
     } else if (SelectedProgram > 0) {  // PROGRAM selected
       if (!ProgramStarted) {  // if first start
