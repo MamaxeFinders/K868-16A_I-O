@@ -210,7 +210,7 @@ void loop() {
       SelectedProgram = buttonIndex;
     } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram-1] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
-    } else if (SelectedProgram > 0 && SelectedProgram < 8) {  // PROGRAM selected and not STOP
+    } else if (SelectedProgram > 0) {  // PROGRAM selected and not STOP
       if (!ProgramStarted && InputButton[SelectedProgram-1] != "STOP") {  // if first start
         activateRelays(relay_out_sequence[SelectedProgram-1],PUMPoutput);
         ProgramStarted = true;
