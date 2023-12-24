@@ -42,7 +42,7 @@ PCF8574 pcf8574_out2(0x25, 4, 5);  //output channel Y9-16
 
 // CREDITS
 const unsigned long CREDIT_DECREMENT_INTERVAL = 2000;                             // Interval in milliseconds between 2 decrement
-const float CREDIT_DECREMENT_AMOUNT[] = { 2.4, 2.4, 2.2, 2.4, 3.0, 0, 0, 0 };  // Amount to decrement in cents every second
+const float CREDIT_DECREMENT_AMOUNT[] = { 2.4, 2.4, 2.2, 2.4, 3.0, 0, 0, 3.0 };  // Amount to decrement in cents every second
 long CreditValue[] = { 100, 200, 300, 400 };                                      // Value of credit for each inputs
 
 // COMBINAISONS DES SORTIES RELAIS Y1-8
@@ -211,7 +211,7 @@ void loop() {
     } else if (buttonIndex > 0 && InputButton[buttonIndex - 1] == "JANTES" && InputButton[SelectedProgram-1] != "BUTTON") {  // JANTES input
       SelectedProgram = buttonIndex;
     } else if (SelectedProgram > 0 && SelectedProgram < 8) {  // PROGRAM selected and not STOP
-      if (!ProgramStarted) {  // if first start
+      if (!ProgramStarted && InputButton[SelectedProgram-1] != "STOP") {  // if first start
         activateRelays(relay_out_sequence[SelectedProgram-1],PUMPoutput);
         ProgramStarted = true;
         displayMessage("    ! PRET !    ", "", true);
