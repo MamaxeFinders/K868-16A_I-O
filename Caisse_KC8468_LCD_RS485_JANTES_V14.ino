@@ -27,7 +27,6 @@ float creditAmount = 0.0;
 unsigned long RemainingCredit = 0;
 unsigned long previousTime = 0;
 bool PRESOSTATstatus = false;
-bool GELstatus = false;
 bool ProgramStarted = false;
 int SelectedProgram = 0;
 int buttonIndex = -1;
@@ -130,7 +129,7 @@ void setup() {
   lcd.backlight();  // initialize the lcd
   displayMessage("     LOADING    ", "                ", 1);
 
-  String messageSEND = "message=PING&event=START&caisse=" + String(DeviceNumber) + "&gel=" + String(GELstatus) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
+  String messageSEND = "message=PING&event=START&caisse=" + String(DeviceNumber) + "&gel=" + String(GELoutput) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
   //Send_Data_to_Google(messageSEND);
   SendToRS485("G:"+messageSEND);
   // Display message on Serial port, LCD line 1, clear LCD before displaying
@@ -146,7 +145,7 @@ void loop() {
   // _______________________ FUNCTION 1 : CHECK INPUT STATUS _______________________ //
   if (!digitalRead(0)) {  // User press RESET button
     displayMessage("TEMP: " + String(dht.readTemperature()), "HUM: "+String(dht.readHumidity()), 1);
-    String messageSEND = "message=PING&event=RESET&caisse=" + String(DeviceNumber) + "&gel=" + String(GELstatus) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
+    String messageSEND = "message=PING&event=RESET&caisse=" + String(DeviceNumber) + "&gel=" + String(GELoutput) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
     //Send_Data_to_Google(messageSEND);
     SendToRS485("G:"+messageSEND);
     delay(2000);
@@ -257,7 +256,7 @@ void loop() {
       lcd.init();
       lcd.backlight();  // initialize the lcd
       activateRelays(allOFF_Output,-1);
-        String messageSEND = "message=PING&event=PING&caisse=" + String(DeviceNumber) + "&gel=" + String(GELstatus) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
+        String messageSEND = "message=PING&event=PING&caisse=" + String(DeviceNumber) + "&gel=" + String(GELoutput) + "&presostat=" + String(PRESOSTATstatus)+ "&temp=" + String(dht.readTemperature())+ "&hum=" + String(dht.readHumidity());
         //Send_Data_to_Goo gle(messageSEND);
         SendToRS485("G:"+messageSEND);
         PRESOSTATstatus = false;
